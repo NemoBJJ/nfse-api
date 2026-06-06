@@ -1,0 +1,10 @@
+com\gestex\nfse\service\NotaFiscalService.class
+com\gestex\nfse\repository\HistoricoNotasRepository.class
+com\gestex\nfse\model\NfseResponse.class
+com\gestex\nfse\controller\NotaFiscalController.class
+com\gestex\nfse\config\CorsConfig.class
+com\gestex\nfse\model\ConfigFiscal.class
+com\gestex\nfse\model\NfseRequest.class
+com\gestex\nfse\repository\ConfigFiscalRepository.class
+com\gestex\nfse\NfseApiApplication.class
+com\gestex\nfse\model\HistoricoNotas.class

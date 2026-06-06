@@ -1,0 +1,10 @@
+C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\model\ConfigFiscal.java
+C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\model\NfseResponse.java
+C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\model\NfseRequest.java
+C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\model\HistoricoNotas.java
+C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\NfseApiApplication.java
+C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\repository\HistoricoNotasRepository.java
+C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\repository\ConfigFiscalRepository.java
+C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\controller\NotaFiscalController.java
+C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\config\CorsConfig.java
+C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\service\NotaFiscalService.java
