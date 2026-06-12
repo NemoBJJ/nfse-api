@@ -1,0 +1,598 @@
+﻿
+
+===============================
+ARQUIVO: C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\NfseApiApplication.java
+===============================
+
+package com.gestex.nfse;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class NfseApiApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(NfseApiApplication.class, args);
+    }
+}
+
+
+===============================
+ARQUIVO: C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\config\CorsConfig.java
+===============================
+
+package com.gestex.nfse.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class CorsConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:3004")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
+    }
+}
+
+
+===============================
+ARQUIVO: C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\controller\NotaFiscalController.java
+===============================
+
+package com.gestex.nfse.controller;
+
+import com.gestex.nfse.model.NfseRequest;
+import com.gestex.nfse.model.NfseResponse;
+import com.gestex.nfse.service.NotaFiscalService;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/nfse")
+public class NotaFiscalController {
+
+    private final NotaFiscalService notaFiscalService;
+
+    public NotaFiscalController(NotaFiscalService notaFiscalService) {
+        this.notaFiscalService = notaFiscalService;
+    }
+
+    @PostMapping("/emitir/{empresaId}")
+    public NfseResponse emitirNota(
+            @PathVariable Long empresaId,
+            @RequestBody NfseRequest request) throws Exception {
+        return notaFiscalService.emitirNota(empresaId, request);
+    }
+
+    @GetMapping("/consultar/{referencia}")
+    public NfseResponse consultarNota(@PathVariable String referencia) throws Exception {
+        return notaFiscalService.consultarNota(referencia);
+    }
+}
+
+
+===============================
+ARQUIVO: C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\model\ConfigFiscal.java
+===============================
+
+package com.gestex.nfse.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "config_fiscal")
+public class ConfigFiscal {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(name = "empresa_id", nullable = false)
+    private Long empresaId;
+    
+    @Column(nullable = false, length = 18)
+    private String cnpj;
+    
+    @Column(name = "razao_social", length = 200)
+    private String razaoSocial;
+    
+    @Column(name = "inscricao_municipal", length = 20)
+    private String inscricaoMunicipal;
+    
+    @Column(name = "codigo_municipio_ibge", length = 7)
+    private String codigoMunicipioIbge;
+    
+    @Column(name = "token_homologacao", length = 255)
+    private String tokenHomologacao;
+    
+    @Column(name = "token_producao", length = 255)
+    private String tokenProducao;
+    
+    @Column(length = 10)
+    private String ambiente;
+    
+    @Column(name = "regime_tributario", length = 1)
+    private String regimeTributario;
+    
+    @Column(name = "usar_correcao_natal")
+    private Boolean usarCorrecaoNatal;
+    
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Long getEmpresaId() { return empresaId; }
+    public void setEmpresaId(Long empresaId) { this.empresaId = empresaId; }
+    public String getCnpj() { return cnpj; }
+    public void setCnpj(String cnpj) { this.cnpj = cnpj; }
+    public String getRazaoSocial() { return razaoSocial; }
+    public void setRazaoSocial(String razaoSocial) { this.razaoSocial = razaoSocial; }
+    public String getInscricaoMunicipal() { return inscricaoMunicipal; }
+    public void setInscricaoMunicipal(String inscricaoMunicipal) { this.inscricaoMunicipal = inscricaoMunicipal; }
+    public String getCodigoMunicipioIbge() { return codigoMunicipioIbge; }
+    public void setCodigoMunicipioIbge(String codigoMunicipioIbge) { this.codigoMunicipioIbge = codigoMunicipioIbge; }
+    public String getTokenHomologacao() { return tokenHomologacao; }
+    public void setTokenHomologacao(String tokenHomologacao) { this.tokenHomologacao = tokenHomologacao; }
+    public String getTokenProducao() { return tokenProducao; }
+    public void setTokenProducao(String tokenProducao) { this.tokenProducao = tokenProducao; }
+    public String getAmbiente() { return ambiente; }
+    public void setAmbiente(String ambiente) { this.ambiente = ambiente; }
+    public String getRegimeTributario() { return regimeTributario; }
+    public void setRegimeTributario(String regimeTributario) { this.regimeTributario = regimeTributario; }
+    public Boolean getUsarCorrecaoNatal() { return usarCorrecaoNatal; }
+    public void setUsarCorrecaoNatal(Boolean usarCorrecaoNatal) { this.usarCorrecaoNatal = usarCorrecaoNatal; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+}
+
+
+===============================
+ARQUIVO: C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\model\HistoricoNotas.java
+===============================
+
+package com.gestex.nfse.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "historico_notas")
+public class HistoricoNotas {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(name = "empresa_id", nullable = false)
+    private Long empresaId;
+    
+    @Column(nullable = false, length = 100)
+    private String referencia;
+    
+    @Column(name = "numero_rps", length = 20)
+    private String numeroRps;
+    
+    @Column(name = "chave_nfse", length = 100)
+    private String chaveNfse;
+    
+    @Column(length = 30)
+    private String status;
+    
+    @Column(length = 20)
+    private String numero;
+    
+    @Column(name = "codigo_verificacao", length = 100)
+    private String codigoVerificacao;
+    
+    @Column(name = "data_emissao")
+    private LocalDateTime dataEmissao;
+    
+    @Column(name = "valor_servico", precision = 10, scale = 2)
+    private BigDecimal valorServico;
+    
+    @Column(name = "tomador_cnpj", length = 18)
+    private String tomadorCnpj;
+    
+    @Column(name = "tomador_nome", length = 200)
+    private String tomadorNome;
+    
+    @Column(name = "url_xml", length = 500)
+    private String urlXml;
+    
+    @Column(name = "url_pdf", length = 500)
+    private String urlPdf;
+    
+    @Column(name = "response_json", columnDefinition = "JSON")
+    private String responseJson;
+    
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Long getEmpresaId() { return empresaId; }
+    public void setEmpresaId(Long empresaId) { this.empresaId = empresaId; }
+    public String getReferencia() { return referencia; }
+    public void setReferencia(String referencia) { this.referencia = referencia; }
+    public String getNumeroRps() { return numeroRps; }
+    public void setNumeroRps(String numeroRps) { this.numeroRps = numeroRps; }
+    public String getChaveNfse() { return chaveNfse; }
+    public void setChaveNfse(String chaveNfse) { this.chaveNfse = chaveNfse; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public String getNumero() { return numero; }
+    public void setNumero(String numero) { this.numero = numero; }
+    public String getCodigoVerificacao() { return codigoVerificacao; }
+    public void setCodigoVerificacao(String codigoVerificacao) { this.codigoVerificacao = codigoVerificacao; }
+    public LocalDateTime getDataEmissao() { return dataEmissao; }
+    public void setDataEmissao(LocalDateTime dataEmissao) { this.dataEmissao = dataEmissao; }
+    public BigDecimal getValorServico() { return valorServico; }
+    public void setValorServico(BigDecimal valorServico) { this.valorServico = valorServico; }
+    public String getTomadorCnpj() { return tomadorCnpj; }
+    public void setTomadorCnpj(String tomadorCnpj) { this.tomadorCnpj = tomadorCnpj; }
+    public String getTomadorNome() { return tomadorNome; }
+    public void setTomadorNome(String tomadorNome) { this.tomadorNome = tomadorNome; }
+    public String getUrlXml() { return urlXml; }
+    public void setUrlXml(String urlXml) { this.urlXml = urlXml; }
+    public String getUrlPdf() { return urlPdf; }
+    public void setUrlPdf(String urlPdf) { this.urlPdf = urlPdf; }
+    public String getResponseJson() { return responseJson; }
+    public void setResponseJson(String responseJson) { this.responseJson = responseJson; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+}
+
+
+===============================
+ARQUIVO: C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\model\NfseRequest.java
+===============================
+
+package com.gestex.nfse.model;
+
+import java.math.BigDecimal;
+
+public class NfseRequest {
+    private String cnpjTomador;
+    private String razaoSocialTomador;
+    private String cepTomador;
+    private String logradouroTomador;
+    private String numeroTomador;
+    private String bairroTomador;
+    private String telefoneTomador;
+    private String emailTomador;
+    private String descricaoServico;
+    private BigDecimal valorServico;
+    
+    // Getters e Setters
+    public String getCnpjTomador() { return cnpjTomador; }
+    public void setCnpjTomador(String cnpjTomador) { this.cnpjTomador = cnpjTomador; }
+    public String getRazaoSocialTomador() { return razaoSocialTomador; }
+    public void setRazaoSocialTomador(String razaoSocialTomador) { this.razaoSocialTomador = razaoSocialTomador; }
+    public String getCepTomador() { return cepTomador; }
+    public void setCepTomador(String cepTomador) { this.cepTomador = cepTomador; }
+    public String getLogradouroTomador() { return logradouroTomador; }
+    public void setLogradouroTomador(String logradouroTomador) { this.logradouroTomador = logradouroTomador; }
+    public String getNumeroTomador() { return numeroTomador; }
+    public void setNumeroTomador(String numeroTomador) { this.numeroTomador = numeroTomador; }
+    public String getBairroTomador() { return bairroTomador; }
+    public void setBairroTomador(String bairroTomador) { this.bairroTomador = bairroTomador; }
+    public String getTelefoneTomador() { return telefoneTomador; }
+    public void setTelefoneTomador(String telefoneTomador) { this.telefoneTomador = telefoneTomador; }
+    public String getEmailTomador() { return emailTomador; }
+    public void setEmailTomador(String emailTomador) { this.emailTomador = emailTomador; }
+    public String getDescricaoServico() { return descricaoServico; }
+    public void setDescricaoServico(String descricaoServico) { this.descricaoServico = descricaoServico; }
+    public BigDecimal getValorServico() { return valorServico; }
+    public void setValorServico(BigDecimal valorServico) { this.valorServico = valorServico; }
+}
+
+
+===============================
+ARQUIVO: C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\model\NfseResponse.java
+===============================
+
+package com.gestex.nfse.model;
+
+public class NfseResponse {
+    private String status;
+    private String numeroRps;
+    private String serieRps;
+    private String numero;
+    private String chaveNfse;
+    private String codigoVerificacao;
+    private String urlXml;
+    private String urlPdf;
+    private String mensagemErro;
+    private String referencia;
+
+    // Getters e Setters
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getNumeroRps() {
+        return numeroRps;
+    }
+
+    public void setNumeroRps(String numeroRps) {
+        this.numeroRps = numeroRps;
+    }
+
+    public String getSerieRps() {
+        return serieRps;
+    }
+
+    public void setSerieRps(String serieRps) {
+        this.serieRps = serieRps;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public String getChaveNfse() {
+        return chaveNfse;
+    }
+
+    public void setChaveNfse(String chaveNfse) {
+        this.chaveNfse = chaveNfse;
+    }
+
+    public String getCodigoVerificacao() {
+        return codigoVerificacao;
+    }
+
+    public void setCodigoVerificacao(String codigoVerificacao) {
+        this.codigoVerificacao = codigoVerificacao;
+    }
+
+    public String getUrlXml() {
+        return urlXml;
+    }
+
+    public void setUrlXml(String urlXml) {
+        this.urlXml = urlXml;
+    }
+
+    public String getUrlPdf() {
+        return urlPdf;
+    }
+
+    public void setUrlPdf(String urlPdf) {
+        this.urlPdf = urlPdf;
+    }
+
+    public String getMensagemErro() {
+        return mensagemErro;
+    }
+
+    public void setMensagemErro(String mensagemErro) {
+        this.mensagemErro = mensagemErro;
+    }
+
+    public String getReferencia() {
+        return referencia;
+    }
+
+    public void setReferencia(String referencia) {
+        this.referencia = referencia;
+    }
+}
+
+
+===============================
+ARQUIVO: C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\repository\ConfigFiscalRepository.java
+===============================
+
+package com.gestex.nfse.repository;
+
+import com.gestex.nfse.model.ConfigFiscal;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
+
+public interface ConfigFiscalRepository extends JpaRepository<ConfigFiscal, Long> {
+    Optional<ConfigFiscal> findByEmpresaId(Long empresaId);
+}
+
+
+===============================
+ARQUIVO: C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\repository\HistoricoNotasRepository.java
+===============================
+
+package com.gestex.nfse.repository;
+
+import com.gestex.nfse.model.HistoricoNotas;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+public interface HistoricoNotasRepository extends JpaRepository<HistoricoNotas, Long> {
+    List<HistoricoNotas> findByEmpresaIdOrderByCreatedAtDesc(Long empresaId);
+}
+
+
+===============================
+ARQUIVO: C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\service\NotaFiscalService.java
+===============================
+
+package com.gestex.nfse.service;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gestex.nfse.model.*;
+import com.gestex.nfse.repository.ConfigFiscalRepository;
+import com.gestex.nfse.repository.HistoricoNotasRepository;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+public class NotaFiscalService {
+
+    private final ConfigFiscalRepository configRepository;
+    private final HistoricoNotasRepository historicoRepository;
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public NotaFiscalService(ConfigFiscalRepository configRepository, HistoricoNotasRepository historicoRepository) {
+        this.configRepository = configRepository;
+        this.historicoRepository = historicoRepository;
+    }
+
+    public NfseResponse emitirNota(Long empresaId, NfseRequest request) throws Exception {
+        ConfigFiscal config = configRepository.findByEmpresaId(empresaId)
+                .orElseThrow(() -> new RuntimeException("ConfiguraÃ§Ã£o fiscal nÃ£o encontrada para empresa " + empresaId));
+
+        String token = config.getTokenHomologacao();
+        String url = "https://homologacao.focusnfe.com.br/v2/nfsen";
+        String referencia = "NFSE_" + System.currentTimeMillis();
+
+        System.out.println("ðŸ” ReferÃªncia gerada: " + referencia);
+
+        Map<String, Object> body = montarJson(request, config);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String auth = Base64.getEncoder().encodeToString((token + ":").getBytes());
+        headers.set("Authorization", "Basic " + auth);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                url + "?ref=" + referencia,
+                HttpMethod.POST,
+                entity,
+                String.class
+        );
+
+        JsonNode jsonResponse = objectMapper.readTree(response.getBody());
+
+        salvarHistorico(config, referencia, request, jsonResponse);
+
+        NfseResponse nfseResponse = new NfseResponse();
+        nfseResponse.setStatus(jsonResponse.has("status") ? jsonResponse.get("status").asText() : "erro");
+        nfseResponse.setNumeroRps(jsonResponse.has("numero_rps") ? jsonResponse.get("numero_rps").asText() : null);
+        nfseResponse.setReferencia(referencia);
+
+        return nfseResponse;
+    }
+
+    public NfseResponse consultarNota(String referencia) throws Exception {
+        ConfigFiscal config = configRepository.findAll().stream().findFirst()
+                .orElseThrow(() -> new RuntimeException("Nenhuma configuraÃ§Ã£o fiscal encontrada"));
+
+        String token = config.getTokenHomologacao();
+        String url = "https://homologacao.focusnfe.com.br/v2/nfsen/" + referencia;
+
+        HttpHeaders headers = new HttpHeaders();
+        String auth = Base64.getEncoder().encodeToString((token + ":").getBytes());
+        headers.set("Authorization", "Basic " + auth);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                url, HttpMethod.GET, entity, String.class
+        );
+
+        JsonNode jsonResponse = objectMapper.readTree(response.getBody());
+
+        NfseResponse nfseResponse = new NfseResponse();
+        nfseResponse.setStatus(jsonResponse.has("status") ? jsonResponse.get("status").asText() : null);
+        nfseResponse.setNumeroRps(jsonResponse.has("numero_rps") ? jsonResponse.get("numero_rps").asText() : null);
+        nfseResponse.setNumero(jsonResponse.has("numero") ? jsonResponse.get("numero").asText() : null);
+        
+        if (jsonResponse.has("caminho_xml_nota_fiscal")) 
+            nfseResponse.setUrlXml(jsonResponse.get("caminho_xml_nota_fiscal").asText());
+        if (jsonResponse.has("url_danfse")) 
+            nfseResponse.setUrlPdf(jsonResponse.get("url_danfse").asText());
+
+        return nfseResponse;
+    }
+
+    private Map<String, Object> montarJson(NfseRequest request, ConfigFiscal config) {
+        Map<String, Object> json = new HashMap<>();
+        String dataAtual = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'-03:00'"));
+        String dataCompetencia = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        json.put("data_emissao", dataAtual);
+        json.put("data_competencia", dataCompetencia);
+        json.put("codigo_municipio_emissora", Integer.parseInt(config.getCodigoMunicipioIbge()));
+        json.put("cnpj_prestador", config.getCnpj());
+
+        // Gambiarra para Natal
+        if (config.getUsarCorrecaoNatal() != null && config.getUsarCorrecaoNatal()) {
+            json.put("codigo_opcao_simples_nacional", 3);
+            json.put("regime_tributario_simples_nacional", 1);
+        } else {
+            json.put("codigo_opcao_simples_nacional", Integer.parseInt(config.getRegimeTributario()));
+        }
+
+        json.put("regime_especial_tributacao", 0);
+        json.put("cnpj_tomador", request.getCnpjTomador());
+        json.put("razao_social_tomador", request.getRazaoSocialTomador());
+        json.put("codigo_municipio_tomador", Integer.parseInt(config.getCodigoMunicipioIbge()));
+        json.put("cep_tomador", request.getCepTomador());
+        json.put("logradouro_tomador", request.getLogradouroTomador());
+        json.put("numero_tomador", request.getNumeroTomador());
+        json.put("bairro_tomador", request.getBairroTomador());
+        json.put("telefone_tomador", request.getTelefoneTomador());
+        json.put("email_tomador", request.getEmailTomador());
+        json.put("codigo_municipio_prestacao", Integer.parseInt(config.getCodigoMunicipioIbge()));
+        json.put("codigo_tributacao_nacional_iss", "130501");
+        json.put("codigo_nbs", "121012200");
+        json.put("descricao_servico", request.getDescricaoServico());
+        json.put("valor_servico", request.getValorServico());
+        json.put("valor_iss", request.getValorServico().multiply(new java.math.BigDecimal("0.02")));
+        json.put("tributacao_iss", 1);
+        json.put("tipo_retencao_iss", 1);
+        json.put("situacao_tributaria_pis_cofins", "00");
+        json.put("percentual_total_tributos_federais", "10.38");
+        json.put("percentual_total_tributos_estaduais", "0.00");
+        json.put("percentual_total_tributos_municipais", "2.50");
+        json.put("indicador_total_tributacao", null);
+
+        return json;
+    }
+
+    private void salvarHistorico(ConfigFiscal config, String referencia, NfseRequest request, JsonNode response) {
+        HistoricoNotas historico = new HistoricoNotas();
+        historico.setEmpresaId(config.getEmpresaId());
+        historico.setReferencia(referencia);
+        historico.setStatus(response.has("status") ? response.get("status").asText() : "erro");
+        if (response.has("numero_rps")) historico.setNumeroRps(response.get("numero_rps").asText());
+        if (response.has("numero")) historico.setNumero(response.get("numero").asText());
+        if (response.has("codigo_verificacao")) historico.setCodigoVerificacao(response.get("codigo_verificacao").asText());
+        if (response.has("url_danfse")) historico.setUrlPdf(response.get("url_danfse").asText());
+        historico.setValorServico(request.getValorServico());
+        historico.setTomadorCnpj(request.getCnpjTomador());
+        historico.setTomadorNome(request.getRazaoSocialTomador());
+        historico.setDataEmissao(LocalDateTime.now());
+        historico.setCreatedAt(LocalDateTime.now());
+        historico.setResponseJson(response.toString());
+
+        historicoRepository.save(historico);
+    }
+}
