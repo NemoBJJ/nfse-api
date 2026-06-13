@@ -2,6 +2,7 @@ C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\model\Co
 C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\model\NfseResponse.java
 C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\model\NfseRequest.java
 C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\model\HistoricoNotas.java
+C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\controller\HealthController.java
 C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\NfseApiApplication.java
 C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\repository\HistoricoNotasRepository.java
 C:\Users\Nemo\Desktop\erp-system\nfse-api\src\main\java\com\gestex\nfse\repository\ConfigFiscalRepository.java

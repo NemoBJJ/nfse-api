@@ -7,4 +7,5 @@ com\gestex\nfse\model\ConfigFiscal.class
 com\gestex\nfse\model\NfseRequest.class
 com\gestex\nfse\repository\ConfigFiscalRepository.class
 com\gestex\nfse\NfseApiApplication.class
+com\gestex\nfse\controller\HealthController.class
 com\gestex\nfse\model\HistoricoNotas.class
